@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 void* addPerson(void *pBuffer);
+void* listPeople(void *pBuffer);
 
 
 
@@ -10,6 +11,8 @@ int main(){
     void *pBuffer = malloc(3 * sizeof(int) + 100);
     if( pBuffer != NULL){
         *(int*)pBuffer = 0;
+        *(int*)((char*)pBuffer + sizeof(int)) = 0;
+        *(int*)((char*)pBuffer + 2 * sizeof(int)) = 0;
     }else {
         printf("NÃO FOI POSSÍVEL ALOCAR MEMORIA... SAINDO DO PROGRAMA.");
         exit(1);
@@ -38,10 +41,10 @@ int main(){
             /* code */
             break;
             case 4:
-            /* code */
+            listPeople(pBuffer);
             break;
             case 5:
-            /* code */
+            printf("Obrigado por usar o Programa!");
             break;
             
             default:
@@ -56,22 +59,22 @@ void* addPerson(void* pBuffer){
     
     
     //ADICIONANDO NOME
-    printf("\n NOME: \n");
+    printf("\nNOME: \n");
     fgets((char *)pBuffer + 3*sizeof(int), 100, stdin);
-    ((char *)pBuffer + (sizeof(int)*3))[strcspn((char *)pBuffer+sizeof(int)*3, "\n")] = '|'; 
+    ((char *)pBuffer + (sizeof(int)*3))[strcspn((char *)pBuffer+sizeof(int)*3, "\n")] = '\0'; 
     pBuffer = realloc(pBuffer,3*sizeof(int) + 100 + strlen((char *)pBuffer + (3 * sizeof(int))) + *(int*)((char *)pBuffer + sizeof(int)) + sizeof(int) + 1);    
     memcpy((char *)pBuffer + 3 * sizeof(int) + 100 + *(int*)((char *)pBuffer + sizeof(int)), pBuffer + ( 3 * sizeof(int)), strlen((char *)pBuffer +3*sizeof(int))+1);
     *(int *)((char *)pBuffer+sizeof(int)) += strlen((char *)pBuffer + (3 * sizeof(int)))+1 + sizeof(int);
     
     //ADICIONANDO IDADE
-    printf("\n IDADE: \n");
+    printf("\nIDADE: \n");
     scanf("%d",(int*)((char*) pBuffer +3*sizeof(int)+100+*(int*)((char*)pBuffer + sizeof(int)) - sizeof(int)));
     getchar();
 
     //ADICIONANDO EMAIL
-    printf("\n EMAIL: \n");
+    printf("\nEMAIL: \n");
     fgets((char *)pBuffer + 3*sizeof(int), 100, stdin);
-    ((char *)pBuffer + (sizeof(int)*3))[strcspn((char *)pBuffer+sizeof(int)*3, "\n")] = '|'; 
+    ((char *)pBuffer + (sizeof(int)*3))[strcspn((char *)pBuffer+sizeof(int)*3, "\n")] = '\0'; 
     pBuffer = realloc(pBuffer,3*sizeof(int) + 100 + (*(int *)((char *)pBuffer + sizeof(int))) + strlen((char *)pBuffer + (3 * sizeof(int))) + 1);    
     memcpy((char *)pBuffer+3*sizeof(int) + 100 + (*(int *)((char *)pBuffer + sizeof(int))) , pBuffer+(3*sizeof(int)) , strlen((char *)pBuffer +3*sizeof(int))+1);
     *(int *)((char *)pBuffer+sizeof(int)) += strlen((char *)pBuffer + (3 * sizeof(int)))+1;
@@ -80,5 +83,23 @@ void* addPerson(void* pBuffer){
     return pBuffer;
 }
 
+void* listPeople(void *pBuffer){
+    *(int*)((char *)pBuffer + 2 * sizeof(int)) = 0;
 
+    while(*(int*)((char *)pBuffer + 2 * sizeof(int)) < *(int*)((char *)pBuffer + sizeof(int))){
+        //IMPRIMIR NOME
+        printf("\nNome: %s\n", (char*)pBuffer + 3 * sizeof(int) + 100 + *(int*)((char *)pBuffer + 2 * sizeof(int)));
+        *(int *)((char *)pBuffer + 2 * sizeof(int)) += strlen((char*)pBuffer + 3 * sizeof(int) + 100 + *(int*)((char *)pBuffer + 2 * sizeof(int))) + 1;
+
+        //IMPRIMIR IDADE
+        printf("Idade: %d\n",*(int*)((char *)pBuffer + 3 * sizeof(int) + 100 + *(int*)((char *)pBuffer + 2 * sizeof(int))));
+        *(int *)((char *)pBuffer + 2 * sizeof(int)) += sizeof(int);
+
+        //IMPRIMIR EMAIL
+        printf("Email: %s\n", (char *)pBuffer + 3 * sizeof(int) + 100 + *(int*)((char *)pBuffer + 2 * sizeof(int)));
+        *(int*)((char *)pBuffer + 2 * sizeof(int)) += strlen((char *)pBuffer + 3 * sizeof(int) + 100 + *(int*)((char *)pBuffer + 2 * sizeof(int))) + 1;
+
+        printf("-----------------------------\n");
+    }
+}
 
