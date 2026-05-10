@@ -2,14 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-
-
-
+void* addPerson(void *pBuffer);
 
 
 
 int main(){
-    void *pBuffer = malloc(3 * sizeof(int));
+    void *pBuffer = malloc(3 * sizeof(int) + 100);
     if( pBuffer != NULL){
         *(int*)pBuffer = 0;
     }else {
@@ -26,11 +24,12 @@ int main(){
             "\n 5 - Sair "
             "\n->");
         scanf("%d", (int *)pBuffer);
+        getchar();
         
         switch (*(int *)pBuffer)
         {
             case 1:
-            /* code */
+            pBuffer = addPerson(pBuffer);
             break;
             case 2:
             /* code */
@@ -50,14 +49,36 @@ int main(){
         }
     }
     free(pBuffer);
-
-
     return 0;
-
-
 }
 
+void* addPerson(void* pBuffer){
+    
+    
+    //ADICIONANDO NOME
+    printf("\n NOME: \n");
+    fgets((char *)pBuffer + 3*sizeof(int), 100, stdin);
+    ((char *)pBuffer + (sizeof(int)*3))[strcspn((char *)pBuffer+sizeof(int)*3, "\n")] = '|'; 
+    pBuffer = realloc(pBuffer,3*sizeof(int) + 100 + strlen((char *)pBuffer + (3 * sizeof(int))) + *(int*)((char *)pBuffer + sizeof(int)) + sizeof(int) + 1);    
+    memcpy((char *)pBuffer + 3 * sizeof(int) + 100 + *(int*)((char *)pBuffer + sizeof(int)), pBuffer + ( 3 * sizeof(int)), strlen((char *)pBuffer +3*sizeof(int))+1);
+    *(int *)((char *)pBuffer+sizeof(int)) += strlen((char *)pBuffer + (3 * sizeof(int)))+1 + sizeof(int);
+    
+    //ADICIONANDO IDADE
+    printf("\n IDADE: \n");
+    scanf("%d",(int*)((char*) pBuffer +3*sizeof(int)+100+*(int*)((char*)pBuffer + sizeof(int)) - sizeof(int)));
+    getchar();
 
+    //ADICIONANDO EMAIL
+    printf("\n EMAIL: \n");
+    fgets((char *)pBuffer + 3*sizeof(int), 100, stdin);
+    ((char *)pBuffer + (sizeof(int)*3))[strcspn((char *)pBuffer+sizeof(int)*3, "\n")] = '|'; 
+    pBuffer = realloc(pBuffer,3*sizeof(int) + 100 + (*(int *)((char *)pBuffer + sizeof(int))) + strlen((char *)pBuffer + (3 * sizeof(int))) + 1);    
+    memcpy((char *)pBuffer+3*sizeof(int) + 100 + (*(int *)((char *)pBuffer + sizeof(int))) , pBuffer+(3*sizeof(int)) , strlen((char *)pBuffer +3*sizeof(int))+1);
+    *(int *)((char *)pBuffer+sizeof(int)) += strlen((char *)pBuffer + (3 * sizeof(int)))+1;
+
+
+    return pBuffer;
+}
 
 
 
