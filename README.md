@@ -47,3 +47,6 @@ Este projeto foi um exercício intenso de **Gerenciamento Manual de Memória**. 
 
 ---
 *Desenvolvido como um desafio focado em domínio de baixo nível e arquitetura de computadores.*
+
+
+Link Vídeo para Informática UFPEL: https://drive.google.com/file/d/10IM7D-JTUALDNMlrv6vBEtcwWBguLEqb/view?usp=sharing
